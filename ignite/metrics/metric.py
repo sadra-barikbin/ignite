@@ -704,6 +704,9 @@ class Metric(Serializable, metaclass=ABCMeta):
     def __getattr__(self, attr: str) -> Callable:
         from ignite.metrics.metrics_lambda import MetricsLambda
 
+        if attr.startswith("__") and attr.endswith("__"):
+            return object.__getattribute__(self, attr)
+
         def fn(x: Metric, *args: Any, **kwargs: Any) -> Any:
             return getattr(x, attr)(*args, **kwargs)
 
